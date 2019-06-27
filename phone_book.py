@@ -1,32 +1,3 @@
-# Создать приложение телефонная книга. класс Contact имеет следующие поля:
-# Имя, фамилия, телефонный номер - обязательные поля;
-# избранный контакт - необязательное поле. По умолчанию False;
-# Дополнительная информация(email, список дополнительных номеров, ссылки на соцсети) - необходимо использовать *args, **kwargs.
-# Переопределить "магический" метод str для красивого вывода контакта. Вывод контакта должен быть следующим
-#
-# jhon = Contact('Jhon', 'Smith', '+71234567809', telegram='@jhony', email='jhony@smith.com')
-# print(jhon)
-
-# Вывод:
-# Имя: Jhon
-# Фамилия: Smith
-# Телефон: +71234567809
-# В избранных: нет
-# Дополнительная информация:
-# 	 telegram : @jhony
-# 	 email : jhony@smith.com
-
-# класс PhoneBook:
-# Название телефонной книги - обязательное поле;
-# Телефонная книга должна работать с классами Contact.
-# Методы:
-#
-# Вывод контактов из телефонной книги;
-# Добавление нового контакта;
-# Удаление контакта по номеру телефона;
-# Поиск всех избранных номеров
-# Поиск контакта по имени и фамилии
-
 # *3. Продвинутый print (необязательное задание) Разработать свою реализацию функции print - adv_print. Она ничем не должна отличаться от классической функции кроме трех новых необязательных аргументов:
 #
 # start - с чего начинается вывод. По умолчанию пустая строка;
@@ -43,34 +14,109 @@ class Contact:
         self.kwargs = kwargs
 
     def __str__(self):
-        return f'Имя: {self.name}\n' \
-            f'Фамилия: {self.surname}\n' \
-            f'Номер телефона: {self.phone_number}\n' \
-            f'Избранный: {self.favorite}, необходимо отредактировать вывод\n' \
-            f'Дополнительная информация: {self.kwargs}, необходимо отредактировать вывод\n' \
+        print(f'Имя: {self.name}\n'
+              f'Фамилия: {self.surname}\n'
+              f'Номер телефона: {self.phone_number}')
+        if self.favorite is False:
+            print('Избранный: нет')
+        else:
+            print('Избранный: да')
+        print('Дополнительная информация:')
+        for elem, value in self.kwargs.items():
+            print('\t', elem, ':', value)
+        return ''
 
-class PhoneBook(Contact):
+class PhoneBook:
     contact_list = []
 
+    def __init__(self, name_book):
+        self.name_book = name_book
+
     def get_contact(self):
-        pass
+        if len(self.contact_list) == 0:
+            print('Книга пуста')
+            self.contact_list.append(get_new_contact())
+        else:
+            for contact in self.contact_list:
+                print('\n', contact)
+        return
 
-    def add_contact(self):
-        pass
+    def add_contact(self, who_add):
+        self.contact_list.append(who_add)
+        print('Контакт добавлен\n')
+        return
 
-    def del_contact_for_number(self):
-        pass
+    def del_contact_for_number(self, phone_number):
+        for contact in self.contact_list:
+            if phone_number == contact.phone_number:
+                self.contact_list.remove(contact)
+        print('Контакт удален\n')
+        return
 
-    def search_favorite(self):
-        pass
+    def get_favorite(self):
+        for contact in self.contact_list:
+            if contact.favorite is True:
+                print(contact.name, contact.surname, contact.phone_number)
+        return
 
-    def search_for_name_and_surname(self):
-        pass
+    def search_for_name_and_surname(self, name, surname):
+        for contact in self.contact_list:
+            if name == contact.name and surname == contact.surname:
+                print(contact)
+        return
+
+def get_favorite():
+    favorite = input('Добавить в избранные? +/- ')
+    if favorite is '+':
+        favorite = True
+    elif favorite is '-':
+        favorite = False
+    else:
+        print('Некорректные данные!!!')
+        favorite = get_favorite()
+    return favorite
+
+def get_new_contact():
+    print('Введите данные нового контакта:')
+    name = input('Имя:')
+    surname = input('Фамилия:')
+    phone_number = input('Номер телефона:')
+    favorite = get_favorite()
+    email = input('email')
+    telegram = input('telegram')
+    facebooke = input('facebook')
+    vkontakte = input('vkontakte')
+    add_phone1 = input('add_phone1')
+    add_phone2 = input('add_phone2')
+    new_contact = Contact(name, surname, phone_number, favorite, email=email, telegram=telegram, facebooke=facebooke,
+                          vkontakte=vkontakte, add_phone1=add_phone1, add_phone2=add_phone2)
+    return new_contact
 
 
 if __name__ == '__main__':
-    jhon = Contact('Jhon', 'Smith', '+71234567809', telegram='@jhony', email='jhony@smith.com')
-    paul = PhoneBook('Paul', 'Xxx', '+7**********', True, telegram='@paul', email='xxx@mail.com', vk='vk.com',
-                   facebook='facebook.com')
-    print(jhon)
-    print(paul)
+    tel_book = PhoneBook(input('Введите название телефонной книги: '))
+    print(f'Книга {tel_book.name_book} создана')
+    print('Доступные команды:\n'
+          '"a" - вывести список всех контактов\n'
+          '"b" - добавить контакт\n'
+          '"c" - удалить по номеру телефона\n'
+          '"d" - избранные\n'
+          '"e" - найти по имени и фамилии\n'
+          '"q" - выход\n')
+    while True:
+        input_command = input('Введите команду:')
+        if input_command == "a":
+            tel_book.get_contact()
+        if input_command == "b":
+            tel_book.add_contact(get_new_contact())
+        if input_command == "c":
+            input_phone = input('Введите номер телефона: ')
+            tel_book.del_contact_for_number(input_phone)
+        if input_command == "d":
+            tel_book.get_favorite()
+        if input_command == "e":
+            input_name = input('Введите имя: ')
+            input_surname = input('Введите фамилию: ')
+            tel_book.search_for_name_and_surname(input_name, input_surname)
+        if input_command == "q":
+            break
