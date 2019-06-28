@@ -92,8 +92,7 @@ def get_new_contact():
                           vkontakte=vkontakte, add_phone1=add_phone1, add_phone2=add_phone2)
     return new_contact
 
-
-if __name__ == '__main__':
+def main():
     tel_book = PhoneBook(input('Введите название телефонной книги: '))
     print(f'Книга {tel_book.name_book} создана')
     print('Доступные команды:\n'
@@ -120,3 +119,7 @@ if __name__ == '__main__':
             tel_book.search_for_name_and_surname(input_name, input_surname)
         if input_command == "q":
             break
+
+
+if __name__ == '__main__':
+    main()
